@@ -1,0 +1,872 @@
+（1）P45第3题//单链表逆置（正整数链表）
+题目：以单链表作为存储结构，各写一个实现线性表的就地(即使用尽可能少的附加空间)逆置的算法，在原表的存储空间内将线性表(a1，a2,.. .,an)逆置为(an,.. .,a2,a1)。
+要求：时间复杂度为O(n),空间复杂度为O(1)
+
+#include "stdafx.h" //stdafx.h 是 Visual Studio 的预编译头，非 VS 环境编译删除即可。
+#include<malloc.h>
+#include<stdio.h>
+//单链表结构类型定义
+typedef int datatype;
+typedef struct node
+{
+   datatype data;
+   struct node *next;
+}linklist;
+linklist* create( );    // 创建单链表（带头结点）
+void print(linklist *); // 输出单链表
+void invert(linklist*); // 逆置单链表
+int main( )
+{
+    linklist * head;
+    printf("***************请创建链表,-1结束输入*****************\n");
+    head=create( );//创建单链表
+    printf("***************输出原链表*****************\n");
+    print(head);//输出单链表
+    invert(head);//调用单链表逆置的函数
+    printf("************输出逆置后的链表**************\n");
+    print(head);//输出单链表
+    return 0;
+}
+
+//创建函数create()也可以不用提供的示例，自行完成
+//尾插法建立具有头结点的单链表
+linklist* create( )
+{ linklist *head = (linklist*)malloc(sizeof(linklist));
+    head->next = NULL;
+
+    linklist *tail = head;
+    int x;
+    scanf("%d", &x);
+    while (x != -1) {
+        linklist *p = (linklist*)malloc(sizeof(linklist));
+        p->data = x;
+        p->next = NULL;
+        tail->next = p;
+        tail = p;
+        scanf("%d", &x);
+    }
+    return head;
+
+}
+
+//输出单链表
+void print(linklist *head)
+{
+    linklist *p = head->next;
+    printf("head");
+    if (p == NULL) {
+        printf(" -> # -> NULL\n");
+        return;
+    }
+
+    printf(" -> #");
+    while (p != NULL) {
+        printf(" -> %d", p->data);
+        p = p->next;
+    }
+    printf(" -> NULL\n");
+}
+
+
+
+//链表逆置，只能通过修改指针的方式，不能通过修改元素值的方法实现
+void  invert(linklist* head)
+
+{
+	
+
+
+
+}//时间复杂度为O(n)
+
+
+测试用例1: （偶数长度）
+
+逆置前链表（显示格式）：head->#->1->3->5->7->2->15->20->6->NULL
+逆置后链表（显示格式）：head->#->6->20->15->2->7->5->3->1->NULL 
+
+
+测试用例2：（奇数长度）
+
+逆置前链表（显示格式）：head->#->11->23->5->57->2->35->20->NULL
+逆置后链表（显示格式）：head->#->20->35->2->57->5->23->11->NULL 
+
+测试用例3：（2个结点）
+
+逆置前链表（显示格式）：head->#->45->20->NULL 
+逆置后链表（显示格式）：head->#->20->45->NULL 
+
+
+测试用例4：(1个结点)
+
+逆置前链表（显示格式）：head->#->20->NULL 
+逆置后链表（显示格式）：head->#->20->NULL 
+
+测试用例5（空表）：给出提示或者打印head->#->NULL均可。 
+（2）P45第3题//顺序表逆置
+题目：以顺序表作为存储结构，写一个实现线性表的就地(即使用尽可能少的附加空间，空间复杂度为O(1))逆置的算法，在原表的存储空间内将线性表(a1，a2,.. .,an)逆置为(an,.. .,a2,a1)。
+
+#include "stdafx.h" //stdafx.h 是 Visual Studio 的预编译头，非 VS 环境编译删除即可。
+#include <stdio.h>
+#include <malloc.h>
+
+typedef int datatype;
+#define MAXSIZE 1024
+
+typedef struct {
+    datatype data[MAXSIZE];
+    int last;       // 表长；空表时 last == 0（data[0] 不用）
+} sequenlist;
+
+sequenlist* create();     // 创建顺序表
+void print(sequenlist*);  // 打印顺序表
+void invert(sequenlist*); // 逆置顺序表
+
+int main()
+{
+    sequenlist* L;
+    printf("***************请创建顺序表*****************\n");
+    L = create();
+    printf("****************输出顺序表******************\n");
+    print(L);
+    invert(L);
+    printf("************输出逆置后的顺序表**************\n");
+    print(L);
+    return 0;
+}
+
+//建立顺序表：先输入个数 n，再输入 n 个整数 
+sequenlist* create()
+{
+    sequenlist* L = (sequenlist*)malloc(sizeof(sequenlist));
+    L->last = 0;   // 空表
+
+    int n, x;
+    printf("请输入元素个数：");
+    scanf_s("%d", &n);
+
+    if (n < 0) {
+        printf("元素个数不能为负！\n");
+        return L;
+    }
+    if (n > MAXSIZE - 1) {  // 因为 data[0] 不用，最多存 MAXSIZE-1 个
+        printf("元素个数超过容量，最多 %d 个！\n", MAXSIZE - 1);
+        n = MAXSIZE - 1;
+    }
+
+    printf("请输入 %d 个整数：", n);
+    for (int i = 0; i < n; i++) {
+        scanf_s("%d", &x);
+        L->last++;
+        L->data[L->last] = x;
+    }
+    return L;
+}
+
+/* 输出顺序表 */
+void print(sequenlist* L)
+{
+    if (L->last == 0) {
+        printf("空表\n");
+        return;
+    }
+    for (int i = 1; i <= L->last; i++) {
+        printf("%3d", L->data[i]);
+    }
+    printf("\n");
+}
+
+/* 顺序表逆置，时间复杂度 O(n)，空间复杂度 O(1) */
+void invert(sequenlist* L)
+{
+   
+
+
+
+
+
+}
+
+
+测试用例1: （正常情况，奇数个长度）
+原顺序表： 2 1 3 6 8  
+逆置后的顺序表： 8 6 3 1 2
+
+输入：
+5
+2 1 3 6 8
+
+输出显示如下：
+
+***************请创建顺序表*****************
+请输入元素个数：5
+请输入 5 个整数：2 1 3 6 8
+****************输出顺序表******************
+  2  1  3  6  8
+************输出逆置后的顺序表**************
+  8  6  3  1  2
+
+测试用例2：（正常情况：偶数个长度）
+
+输入：
+4
+10 20 30 50
+
+输出显示如下：
+
+***************请创建顺序表*****************
+请输入元素个数：4
+请输入 4 个整数：10 20 30 50
+****************输出顺序表******************
+10 20 30 50
+************输出逆置后的顺序表**************
+50 30 20 10
+
+测试用例3：（1个元素）
+
+输入：
+1
+9
+
+输出显示如下：
+***************请创建顺序表*****************
+请输入元素个数：1
+请输入 1 个整数：9
+****************输出顺序表******************
+9
+************输出逆置后的顺序表**************
+9
+
+测试用例4: （空表）
+
+输入：
+0
+
+输出显示如下：
+****************输出顺序表******************
+空表
+************输出逆置后的顺序表**************
+提示：空表，无需逆置
+
+
+（3）题目：删除一个带头结点的递增单链表中的所有重复结点，重复结点只保留1个。要求：时间复杂度为O(n)，空间复杂度为O(1)。
+
+#include "stdafx.h" //stdafx.h 是 Visual Studio 的预编译头，非 VS 环境编译删除即可。
+#include<malloc.h>
+#include<stdio.h>
+//单链表结构类型定义
+typedef int datatype;
+typedef struct node
+{  datatype data;
+   struct node *next;
+}linklist;
+linklist* create();           //创建递增单链表（带头结点）
+void print(linklist *);       //打印单链表
+void DelRedundant(linklist *);//递增单链表去重
+void main()
+{
+    linklist*head;
+    head = create();//创建递增单链表
+    printf("****************原递增链表如下****************\n");
+    print(head);//输出单链表
+    DelRedundant(head);//调用单链表去重的函数
+    printf("****************去重后的链表如下****************\n");
+    print(head);//输出单链表
+}
+
+//采用尾插法建立具有头结点的单链表
+linklist* create( )
+{
+	
+
+
+
+}
+
+//输出单链表
+void print(linklist *head)
+{
+	
+
+
+
+
+}
+
+
+
+
+//单链表去重
+void  DelRedundant(linklist *head)
+{
+	
+
+
+
+
+	
+}//时间复杂度为O(n)，空间复杂度O(1)
+
+
+
+
+测试用例1: 
+
+原链表（显示格式）：head->#->1->1->1->3->3->5->6->6->6->6->8->8->15->15->15->15->15->NULL
+去重链表（显示格式）：head->#->1->3->5->6->8->15->NULL
+
+
+测试用例2：
+
+原链表显示：head->#->1->2->2->3->3->3->6->6->6->6->8->8->15->16->16->20->NULL
+
+去重链表显示：head->#->1->2->3->6->8->15->16->20->NULL
+
+
+测试用例3：
+
+原链表显示：head->#->1->2->3->3->3->3->3->NULL
+
+去重链表显示：head->#->1->2->3->NULL 
+
+测试用例4：
+
+原链表显示：head->#->3->3->3->3->3->6->NULL 
+
+去重链表显示：head->#->3->6->NULL
+
+
+测试用例5（空表）: 
+
+输出给出提示即可，如：该表为空表，无需去重
+
+（4）题目：删除递增顺序表中的所有重复结点，重复结点只保留1个。要求：时间复杂度为O(n),空间复杂度为O(1)。
+
+#include "stdafx.h"  //stdafx.h 是 Visual Studio 的预编译头，非 VS 环境编译删除即可。
+#include<stdio.h>
+#include<malloc.h>
+typedef int datatype;
+#define  maxsize  1024
+
+typedef struct
+
+{  datatype data[maxsize];
+   int last;
+}sequenlist;
+
+sequenlist* create();      //创建递增顺序表
+void print(sequenlist*);   //打印顺序表
+void  purge(sequenlist *); //顺序表去重
+
+
+int main()
+
+{ sequenlist*L;
+  char x;
+  L = create();//创建递增顺序表
+  printf("删除之前的顺序表为：");
+  print(L);//输出顺序表
+  purge(L);//调用顺序表去重函数
+  printf("去重之后的顺序表为：");
+  print(L);//输出顺序表
+  return 0;
+
+}
+
+
+
+//建立顺序表
+
+sequenlist* create()
+
+{
+
+	
+
+
+
+}
+
+
+
+//输出顺序表
+
+void print(sequenlist*L)
+
+{
+
+	
+
+
+}
+
+
+
+void  purge(sequenlist *L)
+{
+	
+
+
+
+
+}//删除有序顺序表中重复元素，时间复杂度O(n)
+
+
+
+测试用例1: （输入输出界面格式可以和题目1相同或者不同均可）
+
+去重前的顺序表：1 1 1 3 3 5 6 6 6 6 8 8 15 15 15 15 15
+去重后的顺序表：1 3 5 6 8 15
+
+
+测试用例2：
+
+去重前的顺序表：1 2 2 3 3 3 6 6 6 6 8 8 15 16 16 20
+去重后的顺序表：1 2 3 6 8 15 16 20
+
+
+测试用例3：
+
+去重前的顺序表：1 2 3 3 3 3 3
+去重后的顺序表：1 2 3 
+
+测试用例4：
+
+去重前的顺序表： 3 3 3 3 3 6 
+去重后的顺序表：3 6
+
+
+测试用例5（空表）: 
+输出给出提示即可，如：该表为空表，无需去重
+
+（5）P45第6题// 归并递减
+题目：设A和B是两个递增有序的单链表。试编写一个算法将A和B归并成一个按元素值递减有序的单链表C，并要求辅助空间为O(1)，C表的头结点可另辟空间。分析算法的时间复杂度。
+
+#include "stdafx.h"   // VS 预编译头，非 VS 环境删除此行
+#include <malloc.h>
+#include <stdio.h>
+
+typedef int datatype;
+typedef struct node {
+    datatype data;
+    struct node *next;
+} linklist;
+
+/* 函数声明 */
+linklist* create();                          // 创建递增链表，-1 结束
+void print(linklist *);                      // 打印链表
+linklist* mergelist(linklist*, linklist *);  // 两个递增链表归并成递减
+void insert(linklist*, linklist*);           // 头插法插入
+
+int main(void)
+{
+    linklist *La, *Lb, *Lc;
+    printf("****************请创建链表La******************\n");
+    La = create();
+    printf("****************请创建链表Lb******************\n");
+    Lb = create();
+    printf("***************输出链表La*****************\n");
+    print(La);
+    printf("***************输出链表Lb*****************\n");
+    print(Lb);
+    Lc = mergelist(La, Lb);
+    printf("*****输出显示La表和Lb表归并递减后的链表Lc*****\n");
+    print(Lc);
+    return 0;
+}
+
+//尾插法建立带头结点的单链表，-1 结束 
+linklist* create()
+{
+   
+
+
+
+
+}
+
+// 输出单链表：a1->a2->a3->NULL 
+void print(linklist *head)
+{
+    
+
+
+}
+
+//头插法：把 *p 插到 head 后面 
+void insert(linklist *head, linklist *p)
+{
+    
+
+}
+
+//归并两个递增链表，结果递减，利用原结点
+linklist* mergelist(linklist *La, linklist *Lb)
+{
+    
+
+
+
+}//归并递减，空间复杂度O(1)，分析时间复杂度?
+
+测试用例1：
+La: 3 5 9 7 -1
+Lb: 2 4 6 8 -1
+输出Lc: head->#->9->8->7->6->5->4->3->2->NULL
+
+测试用例2：
+La: 5 10  -1
+Lb: 1 3 8 -1
+输出Lc: head->#->10->8->5->3->1->NULL
+
+测试用例3：
+La:10->12->18->70->90->NULL	
+Lb:15->85->NULL	
+输出 Lc:head->#->90->85->70->18->15->12->10->NULL
+
+
+测试用例4：
+La:-1（空表）	
+Lb:9->18->NULL	
+输出 Lc:head->#->18->9->NULL
+
+测试用例5：
+La:19->28->32->NULL	
+Lb:-1（空表）
+输出Lc:head->#->32->28->19->NULL
+
+（6） 寻找长度大于3的单链表的中间结点，返回该结点的值。（要求：只能遍历一次单链表，时间复杂度O(n)）
+
+#include "stdafx.h"     //stdafx.h 是 Visual Studio 的预编译头，非 VS 环境编译删除即可。
+#include <malloc.h>
+#include <stdio.h>
+
+typedef int datatype;
+typedef struct node {
+    datatype data;
+    struct node *next;
+} linklist;
+
+linklist* create();                  //创建链表（带头结点）
+void print(linklist *head);         //打印链表
+datatype findMiddle(linklist *head);//寻找链表的中间结点
+
+int main()
+{
+    linklist *head;
+    datatype mid;
+    printf("请输入链表数据（整数，-1 结束）：");
+    head = create();
+    printf("\n***************原链表如下***************\n");
+    print(head);
+    if (head->next == NULL) {
+        printf("\n链表为空，无中间结点\n");
+        return 0;
+    }
+    mid = findMiddle(head);
+    printf("\n***************中间结点的值为：%d***************\n", mid);
+    return 0;
+}
+
+linklist* create()
+{
+    
+}
+
+void print(linklist *head)
+{
+    
+}
+
+//遍历一遍链表，找中间结点，时间 O(n)，空间 O(1) 
+datatype findMiddle(linklist *head)
+{
+    
+
+
+}
+
+测试用例1（偶数长度，中间结点第 5 个，偏右），-1结束：
+输入：1 5 3 22 36 78 18 20 -1 
+输出：36          
+
+测试用例2（奇数长度，正中间），-1结束：
+输入：1 5 3 22 36 -1
+输出：3
+
+
+测试用例3：
+输入：8 -1
+输出：8
+
+测试用例4：
+空表（给出提示即可）
+ 
+(7)题目（多项式求和运算）：设单链表A和B分别存储不同的多项式，要求完成多项式的求和运算，求和结果存放在A表中（备注：B表清空）。
+
+#include "stdafx.h"
+#include<malloc.h>
+#include<stdio.h>
+//多项式单链表结构类型定义
+typedef struct node
+{
+	int coef;
+	int exp;
+	struct node *next;
+}linklist;
+linklist* create( );                     //创建单链表
+void print(linklist *);                  //打印链表
+void  SumofPoly(linklist *, linklist *); //多项式求和
+void main( )
+{
+    linklist*A, *B;
+    printf("**************请输入原多项式A链表为*****************\n");
+    A = create( );
+    printf("**************请输入原多项式B链表为*****************\n");
+    B = create( );
+    printf("**************显示原多项式A链表为*****************\n");
+    print(A);
+    printf("**************显示原多项式B链表为*****************\n");
+    print(B);
+    SumofPoly(A, B);//调用多项式求和的函数
+    printf("**************显示求和运算之后的多项式A链表为*****************\n");
+    print(A);
+    printf("**************显示求和运算之后的多项式B链表为*****************\n");
+    print(B);
+
+}
+
+//采用尾插法建立具有头结点的单链表
+linklist* create()
+{
+   linklist* head;
+   int c, e;
+   linklist *s, *r;
+   head = (linklist*)malloc(sizeof(linklist));
+   r = head;
+   scanf_s("%d", &c);
+   scanf_s("%d", &e);
+   while (c != 0)// 由于系数可能出现-1的情况，这里不宜用-1结束输入，0系数不存储所以用0最合适
+	{ s = (linklist*)malloc(sizeof(linklist));
+	  s->coef = c;
+	  s->exp = e;
+	  r->next = s;
+	  r = s;
+	  scanf_s("%d", &c);
+	  scanf_s("%d", &e);
+	}
+    r->next = NULL;
+    return head;
+}
+
+//打印函数
+void print(linklist *head)
+{
+    linklist *p = head->next;
+    printf("head");
+    if (p == NULL) {
+        printf("->#-> NULL\n");
+        return;
+    }
+    printf(" -> #");
+    while (p != NULL) {
+        printf(" -> [%d,%d]", p->coef, p->exp);
+        p = p->next;
+    }
+    printf(" -> NULL\n");
+}
+
+//单链表多项式求和
+void SumofPoly(linklist *A, linklist *B)
+{
+
+
+
+
+
+
+}
+
+测试用例1（注：输出格式不限，显示格式用提供的打印函数即可）：
+
+（1）A(x)=7+3x+9x^8+5x^17+2x^20;
+
+     B(x)=8x+22x^7-9x^8-4x^18+30x^25+10x^35+19x^55;
+
+    计算结果：
+     A(x)= 7+11x+22x^7+5x^17-4x^18+2x^20+30x^25+10x^35+19x^55;
+     B表空
+
+
+测试用例2：
+
+（2）A(x)=19+3x+72x^7+6x^17+2x^28+10x^35+19x^55;
+
+     B(x)=8x^4+22x^7-6x^17-2x^28
+
+    计算结果：
+    A(x)= 19+3x+8x^4+94x^7+10x^35+19x^55;
+    B表空
+
+
+测试用例3：
+
+（3）A(x)=23+3x+7x^6+16x^18+2x^23+10x^32; 
+     B(x)=-23-3x+17x^6-16x^18-2x^23-10x^32;
+
+    计算结果：
+     A(x)= 24x^6;
+     B表空
+
+
+测试用例4：
+
+（4）A(x)=23+3x+7x^6+16x^18+2x^23+10x^32;
+     B(x)= 6x^12+16x^38-2x^42-10x^62;
+     计算结果：
+     A(x)= 23+3x+7x^6+6x^12+16x^18+2x^23+10x^32+16x^38-2x^42-10x^62;
+     B表空
+
+
+
+（8）字符链表判环题：设计一个算法判断单链表是否表尾存在环(链表长度>=3），要求算法的时间复杂度为O(n),空间复杂度为O(1)。
+
+#include "stdafx.h"  //stdafx.h 是 Visual Studio 的预编译头，非 VS 环境编译删除即可。
+#include <malloc.h>
+#include <stdio.h>
+typedef char datatype;
+typedef struct node {
+    datatype data;
+    struct node *next;
+} linklist;
+
+linklist* create();                      //创建链表（带头结点）
+void printnocycle(linklist *head);       // 无环打印
+void printcycle(linklist *head);         // 有环打印
+int  judgecycle(linklist *head);         // 判环
+linklist* findCycleEntry(linklist *head);// 找环入口
+void Yescircle(linklist *head);          // 生成环
+
+void main()
+{
+    int i;
+    linklist *head;
+    printf("生成一个链表，遇到'*'结束：");
+    head = create();
+    printf("\n***********显示原链表：***************\n");
+    printnocycle(head);                  // 原链表一定无环，用无环打印
+    printf("\n 输入i的值，i为偶数调用生成环函数，i为奇数则不调用：");
+    scanf_s("%d", &i);
+    if (i % 2 == 0)
+        Yescircle(head);                 // 偶数生成环，否则不生成
+    /* 判环，并根据结果选择打印函数 */
+    if (judgecycle(head) == 1) {
+        printf("\n ***********判断结果该链表存在环\n");
+        printf("***********带环链表显示如下：***************\n");
+        printcycle(head);                // 有环 → 用有环打印
+    } else {
+        printf("\n ***********该链表不存在环\n");
+        printf("***********无环链表显示如下：***************\n");
+        printnocycle(head);              // 无环 → 用无环打印
+    }
+}
+
+//尾插法建立带头结点的单链表，'*' 结束 
+linklist* create()
+{
+    linklist *head, *s, *r;
+    char ch;
+    head = (linklist*)malloc(sizeof(linklist));
+    r = head;
+
+    while ((ch = getchar()) != '*') {
+        s = (linklist*)malloc(sizeof(linklist));
+        s->data = ch;
+        r->next = s;
+        r = s;
+    }
+    r->next = NULL;
+    return head;
+}
+
+//========== 无环打印：a->b->c->NULL ========== 
+void printnocycle(linklist *head)
+{
+    linklist *p = head->next;
+
+    if (p == NULL) {
+        printf("该表为空表\n");
+        return;
+    }
+
+    while (p != NULL) {
+        printf("%c->", p->data);
+        p = p->next;
+    }
+    printf("NULL\n");
+}
+
+// ========== 有环打印：标出环入口和环 ========== 
+
+void printcycle(linklist *head)
+{
+    linklist *entry = findCycleEntry(head);   // 先找环入口
+
+    if (entry == NULL) {
+        printf("该表无环，请使用 printnocycle\n");
+        return;
+    }
+
+    //第一步：打印头到环入口之前的部分
+    linklist *p = head->next;
+    while (p != entry) {
+        printf("%c->", p->data);
+        p = p->next;
+    }
+
+    //第二步：打印环部分，用括号括起来
+    printf("(%c", entry->data);
+    p = entry->next;
+    while (p != entry) {
+        printf("->%c", p->data);
+        p = p->next;
+    }
+    printf(")->...\n");
+}
+
+// ========== 判环：快慢指针 ==========
+int judgecycle(linklist *head)
+{
+    
+
+
+}
+
+// ========== 找环入口：相遇后，一指针回头，同速前进 ==========
+linklist* findCycleEntry(linklist *head)
+{
+    
+
+
+}
+
+//========== 长度超过3个结点时才生成环，尾结点指向第3个结点 ========== 
+void Yescircle(linklist *head)
+{
+    
+
+
+}
+
+
+测试用例1：无环
+链表：a->e->f->NULL
+
+测试用例2：无环
+链表：e->d->c->f->w->u->NULL
+
+测试用例3：
+链表：a->b->(c->d->e->f)（提示：结点f直接后继为结点c）
+
+
+
